@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import br.senai.sp.lista.model.StatusTarefa;
 import br.senai.sp.lista.model.Tarefa;
 
 public class TarefaIO {
@@ -52,12 +55,41 @@ public class TarefaIO {
 		writer.close();
 	}
 	
-	public static List<Tarefa> readTarefas() throws FileNotFoundException {
+	public static List<Tarefa> readTarefas() throws IOException {
 		File arquivoTarefas = new File(FILE_TAREFA);
 		List<Tarefa> tarefas = new ArrayList<>();
 		FileReader reader = new FileReader(arquivoTarefas);
 		BufferedReader buff = new BufferedReader(reader);
-		return null;
+		String linha;
+		while ((linha = buff.readLine()) != null) {
+			//transformo a linha em um vetor
+			String[] vetor = linha.split(";");
+			// cria uma Tarefa
+			Tarefa a = new Tarefa();
+			a.setId(Long.parseLong(vetor[0]));
+			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			a.setDataCriacao(LocalDate.parse(vetor[1], fmt));
+			
+			a.setDataLimite(LocalDate.parse(vetor[2], fmt));
+			
+			if(!vetor[3].isEmpty()) {
+				a.setDataFinalizada(LocalDate.parse(vetor[3], fmt));
+			}
+			
+			a.setDescricao(vetor[4]);
+			
+			a.setComentario(vetor[5]);
+			
+			int indStatus = Integer.parseInt(vetor[6]);
+			a.setStatus(StatusTarefa.values()[indStatus]);
+			tarefas.add(a);
+			System.out.println(linha);
+		}
+		
+		buff.close();
+		reader.close();
+		System.out.println(tarefas.size());
+		return tarefas;
 	}
 	
 }

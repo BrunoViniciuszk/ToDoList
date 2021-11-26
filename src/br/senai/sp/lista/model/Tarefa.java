@@ -1,6 +1,7 @@
 package br.senai.sp.lista.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Tarefa {
 	private long id;
@@ -53,6 +54,23 @@ public class Tarefa {
 	}
 	public void setStatus(StatusTarefa status) {
 		this.status = status;
+	}
+	
+	public String formatToSave() {
+		StringBuilder builder = new StringBuilder();
+		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		builder.append(this.getId()+";");
+		builder.append(this.getDataCriacao().format(fmt)+";");
+		builder.append(this.getDataLimite().format(fmt)+";");
+		if(this.getDataFinalizada() != null) {
+			builder.append(this.getDataFinalizada().format(fmt));
+		}
+		builder.append(";");
+		builder.append(this.getDescricao()+";");
+		builder.append(this.getComentario()+";");
+		builder.append(this.getStatus().ordinal()+"\n");
+		return builder.toString();
 	}
 	
 	

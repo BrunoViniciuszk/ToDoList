@@ -8,13 +8,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1064.0" style="-fx-background-color: silver;" styleClass="pane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1064.0" style="-fx-background-color: silver;" styleClass="pane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sp.lista.controller.IndexController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="804.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="-1.0">
         <menus>
@@ -36,16 +37,15 @@
         </menus>
       </MenuBar>
       <Label layoutX="31.0" layoutY="82.0" text="Data de Realização" textFill="WHITE" />
-      <DatePicker fx:id="date" layoutX="31.0" layoutY="119.0" />
+      <DatePicker fx:id="dateLimit" layoutX="31.0" layoutY="119.0" />
       <Label layoutX="31.0" layoutY="176.0" text="Tarefa" textFill="WHITE" />
       <TextField fx:id="tfTarefa" layoutX="31.0" layoutY="215.0" />
       <Label layoutX="31.0" layoutY="258.0" text="Status" />
       <TextField fx:id="tfStatus" editable="false" layoutX="31.0" layoutY="285.0" />
-      <TextField fx:id="tfComments" layoutX="31.0" layoutY="360.0" prefHeight="104.0" prefWidth="234.0" />
       <Label layoutX="31.0" layoutY="326.0" text="Comentários" />
-      <Button layoutX="31.0" layoutY="513.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="74.0">
+      <Button defaultButton="true" layoutX="31.0" layoutY="513.0" mnemonicParsing="false" onAction="#btSaveClick" prefHeight="66.0" prefWidth="74.0">
          <graphic>
-            <ImageView fx:id="btSave" fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagens/save.png" />
                </image>
@@ -55,9 +55,9 @@
             <Tooltip text="Salvar" />
          </tooltip>
       </Button>
-      <Button layoutX="236.0" layoutY="513.0" mnemonicParsing="false">
+      <Button fx:id="btDelete" disable="true" layoutX="236.0" layoutY="513.0" mnemonicParsing="false" onAction="#btDeleteClick">
          <graphic>
-            <ImageView fx:id="btDelete" fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView disable="true" fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagens/delete.png" />
                </image>
@@ -67,9 +67,9 @@
             <Tooltip text="Limpar campos" />
          </tooltip>
       </Button>
-      <Button layoutX="132.0" layoutY="513.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="68.0">
+      <Button fx:id="btDate" disable="true" layoutX="132.0" layoutY="513.0" mnemonicParsing="false" onAction="#btDateClick" prefHeight="66.0" prefWidth="68.0">
          <graphic>
-            <ImageView fx:id="btDate" fitHeight="70.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView disable="true" fitHeight="70.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagens/date.png" />
                </image>
@@ -79,9 +79,9 @@
             <Tooltip text="Adiar" />
          </tooltip>
       </Button>
-      <Button layoutX="338.0" layoutY="512.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="68.0">
+      <Button layoutX="338.0" layoutY="512.0" mnemonicParsing="false" onAction="#btEditClick" prefHeight="66.0" prefWidth="68.0">
          <graphic>
-            <ImageView fx:id="btEdit" fitHeight="53.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="53.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagens/edit.png" />
                </image>
@@ -91,15 +91,15 @@
             <Tooltip text="Editar" />
          </tooltip>
       </Button>
-      <TableView fx:id="tvVizu" layoutX="454.0" layoutY="49.0" prefHeight="511.0" prefWidth="591.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="75.0">
+      <TableView fx:id="tvTarefa" layoutX="454.0" layoutY="100.0" prefHeight="486.0" prefWidth="591.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="100.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+          <TableColumn fx:id="tcData" prefWidth="154.0" text="Data" />
+          <TableColumn fx:id="tcTarefa" prefWidth="436.0" text="Tarefa" />
         </columns>
       </TableView>
-      <Button fx:id="btConcluir" layoutX="336.0" layoutY="379.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="74.0">
+      <Button fx:id="btConcluir" disable="true" layoutX="336.0" layoutY="379.0" mnemonicParsing="false" onAction="#btConcluirClick" prefHeight="66.0" prefWidth="74.0">
          <graphic>
-            <ImageView fx:id="btSave1" fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btSave1" disable="true" fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagens/concluir.png" />
                </image>
@@ -109,5 +109,6 @@
             <Tooltip text="Concluir" />
          </tooltip>
       </Button>
+      <TextArea fx:id="tfComments" layoutX="31.0" layoutY="353.0" onKeyPressed="#taKey" prefHeight="126.0" prefWidth="262.0" />
    </children>
 </AnchorPane>
