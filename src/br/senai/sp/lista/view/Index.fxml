@@ -36,14 +36,14 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="31.0" layoutY="82.0" text="Data de Realização" textFill="WHITE" />
-      <DatePicker fx:id="dateLimit" layoutX="31.0" layoutY="119.0" />
-      <Label layoutX="31.0" layoutY="176.0" text="Tarefa" textFill="WHITE" />
+      <Label fx:id="lbData" layoutX="135.0" layoutY="83.0" text="Data de Realização" textFill="WHITE" />
+      <DatePicker fx:id="dateLimit" layoutX="132.0" layoutY="119.0" />
+      <Label fx:id="lbTarefa" layoutX="31.0" layoutY="176.0" text="Tarefa" textFill="WHITE" />
       <TextField fx:id="tfTarefa" layoutX="31.0" layoutY="215.0" />
       <Label layoutX="31.0" layoutY="258.0" text="Status" />
       <TextField fx:id="tfStatus" editable="false" layoutX="31.0" layoutY="285.0" />
-      <Label layoutX="31.0" layoutY="326.0" text="Comentários" />
-      <Button defaultButton="true" layoutX="31.0" layoutY="513.0" mnemonicParsing="false" onAction="#btSaveClick" prefHeight="66.0" prefWidth="74.0">
+      <Label fx:id="lbComments" layoutX="31.0" layoutY="326.0" text="Comentários" />
+      <Button fx:id="btSalvar" defaultButton="true" layoutX="31.0" layoutY="513.0" mnemonicParsing="false" onAction="#btSaveClick" prefHeight="66.0" prefWidth="74.0">
          <graphic>
             <ImageView fitHeight="58.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -79,7 +79,7 @@
             <Tooltip text="Adiar" />
          </tooltip>
       </Button>
-      <Button layoutX="338.0" layoutY="512.0" mnemonicParsing="false" onAction="#btEditClick" prefHeight="66.0" prefWidth="68.0">
+      <Button fx:id="btEdit1" layoutX="338.0" layoutY="512.0" mnemonicParsing="false" onAction="#btEditClick" prefHeight="66.0" prefWidth="68.0">
          <graphic>
             <ImageView fitHeight="53.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -110,5 +110,6 @@
          </tooltip>
       </Button>
       <TextArea fx:id="tfComments" layoutX="31.0" layoutY="353.0" onKeyPressed="#taKey" prefHeight="126.0" prefWidth="262.0" />
+      <TextField fx:id="tfCode" editable="false" layoutX="25.0" layoutY="119.0" prefHeight="25.0" prefWidth="59.0" />
    </children>
 </AnchorPane>

@@ -3,3 +3,16 @@
 .pane {
 	-fx-background-image: url(../imagens/planner-bom.jpg); 
 }
+
+.erro {
+	-fx-text-fill: red;
+}
+
+.table-row-cell:selected .text {
+	-fx-fill: black;
+}
+
+.table-row-cell:selected {
+	-fx-background-color: silver !important;
+	-fx-border-color: black;
+}
