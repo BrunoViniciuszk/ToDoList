@@ -1,5 +1,6 @@
 package br.senai.sp.lista.controller;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,7 +14,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import br.senai.sp.lista.io.TarefaIO;
 import br.senai.sp.lista.model.StatusTarefa;
@@ -22,10 +26,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -33,19 +40,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 public class IndexController implements Initializable, ChangeListener<Tarefa> {
 	@FXML
 	private DatePicker dateLimit;
-
-	@FXML
-	private TextField tfTarefa;
-
-	@FXML
-	private TextField tfStatus;
 
 	@FXML
 	private TextArea tfComments;
@@ -58,31 +64,22 @@ public class IndexController implements Initializable, ChangeListener<Tarefa> {
 
 	@FXML
 	private TableColumn<Tarefa, String> tcTarefa;
+	
+	@FXML
+	private Button btDate, btDelete, btConcluir, btEdit1, btSalvar;
 
 	@FXML
-	private Button btDate;
-
-	@FXML
-	private Button btConcluir;
-
-	@FXML
-	private Button btDelete;
-
-	@FXML
-	private TextField tfCode;
-
-	@FXML
-	private Button btSalvar;
-
-	@FXML
-	private Button btEdit1;
+	private TextField tfConc, tfAtraso, tfOpen, tfAdiada, tfCode, tfTarefa, tfStatus;
 
 	@FXML
 	private Label lbTarefa, lbComments, lbData;
+	
+	@FXML
+	private MenuItem miApagar;
 
 	// variavel para guardar tarefa
 	private Tarefa tarefa;
-
+	
 	// variavel para guardar lista de tarefas
 	private List<Tarefa> tarefas;
 
@@ -173,7 +170,7 @@ public class IndexController implements Initializable, ChangeListener<Tarefa> {
 							JOptionPane.ERROR_MESSAGE);
 				}
 
-				atualizaId();
+				/*atualizaId();*/
 			}
 		}
 
@@ -261,7 +258,13 @@ public class IndexController implements Initializable, ChangeListener<Tarefa> {
 		lbData.setText("Data para realização");
 		lbComments.setText("Comentários");
 		lbTarefa.setText("Tarefa");
-		atualizaId();
+		/*atualizaId();*/
+		try {
+			tfCode.setText(TarefaIO.contTarefas(tarefas) + "");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -346,28 +349,61 @@ public class IndexController implements Initializable, ChangeListener<Tarefa> {
 		});
 
 		carregarTarefas();
-		atualizaId();
+		/*atualizaId();*/
+		
+		for (Tarefa tarefa : tarefas) {
+			if(tarefa.getDataLimite().isBefore(LocalDate.now())) {
+				JOptionPane.showMessageDialog(null, "Você tem tarefas atrasadas");
+				break;
+			}
+		}
+		
+		
 	}
 
-	private void atualizaId() {
+	/*private void atualizaId() {
 		try {
 			tfCode.setText(TarefaIO.proximoId() + "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	private void carregarTarefas() {
 		try {
 			tarefas = TarefaIO.readTarefas();
 			tvTarefa.setItems(FXCollections.observableArrayList(tarefas));
+			tarefas.size();
+			tfCode.setText(TarefaIO.contTarefas(tarefas) + "");
 			// atualiza tabela
 			tvTarefa.refresh();
+			// conta as tarefas concluidas, adiadas e abertas
+			int cont=0;
+			int cont2=0;
+			int cont3=0;
+			int cont4=0;
+			for (Tarefa tarefa : tarefas) {
+				if(tarefa.getStatus() == StatusTarefa.CONCLUIDA) {
+					cont++;
+				} else if(tarefa.getDataLimite().isBefore(LocalDate.now())) {
+					cont2++;	
+				} else if(tarefa.getStatus() == StatusTarefa.ADIADA) {
+					cont3++;
+				} else {
+					cont4++;
+				}
+				tfConc.setText(cont+"");
+				tfOpen.setText(cont4+"");
+				tfAtraso.setText(cont2+"");
+				tfAdiada.setText(cont3+"");
+			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao buscar tarefas", "ERRO", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		
+		
 
 	}
 
@@ -378,11 +414,150 @@ public class IndexController implements Initializable, ChangeListener<Tarefa> {
 			btSaveClick();
 		}
 	}
+	
+	public void taKeyPressed(KeyEvent evento) {
+		if(evento.getCharacter().equals(";")) {
+			evento.consume();
+		}
+	}
 
 	@Override
 	public void changed(ObservableValue<? extends Tarefa> observable, Tarefa oldValue, Tarefa newValue) {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	@FXML
+	private void miSair() {
+		JOptionPane.showConfirmDialog(null, "Deseja mesmo sair " + "?", "Sair", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		System.exit(0);
+	}
+	
+	@FXML
+	private void miExport() {
+		FileFilter filter = new FileNameExtensionFilter("Arquivos HTML", "html");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(filter);
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File arqSelecionado = chooser.getSelectedFile();
+			arqSelecionado = new File(arqSelecionado+".html");
+			try { 
+				TarefaIO.exportHtml(tarefas, arqSelecionado);
+				Desktop d = Desktop.getDesktop();
+				d.open(arqSelecionado);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Erro ao exportar as tarefas", "Erro", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+	      
+		}
+		
+	}
+	
+	@FXML
+	private void miSobre() {
+		try {
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("/br/senai/sp/lista/view/Sobre.fxml"));
+			Scene scene = new Scene(root, 724, 500);
+			scene.getStylesheets().add(getClass().getResource("/br/senai/sp/lista/view/application.css").toExternalForm());
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.setTitle("Sobre");
+			stage.getIcons().add(new Image(getClass().getResourceAsStream("/br/senai/sp/lista/imagens/logo-sobre.png")));
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.showAndWait();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	private void miApagarClick() {
+		int apaga = JOptionPane.showConfirmDialog(null, "Deseja mesmo apagar?", "Resetar Tarefas", JOptionPane.YES_NO_OPTION);
+		if(apaga == 0) {
+			
+			TarefaIO.removeFiles();
+			TarefaIO.createFiles();
+			carregarTarefas();
+		}
+		
+	}
+	
+	@FXML
+	private void miLogin() {
+		try {
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("/br/senai/sp/lista/view/Login.fxml"));
+			Scene scene = new Scene(root, 600, 400);
+			scene.getStylesheets().add(getClass().getResource("/br/senai/sp/lista/view/application.css").toExternalForm());
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.setTitle("Login");
+			/*stage.getIcons().add(new Image(getClass().getResourceAsStream("/br/senai/sp/lista/imagens/logo-sobre.png")));*/
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.showAndWait();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	private void exportFiltradas(StatusTarefa status) {
+		JFileChooser chooser = new JFileChooser();
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File arqSelecionado = chooser.getSelectedFile();
+			arqSelecionado = new File(arqSelecionado+"");
+			
+			try {
+				List<Tarefa> tarefaFiltrada = TarefaIO.readTarefas();
+				tarefaFiltrada.removeIf(f -> f.getStatus()!= status);
+				TarefaIO.exportHtml(tarefaFiltrada, arqSelecionado);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Erro ao exportar as tarefas", "Erro", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			
+		}	
+	}
+	
+	@FXML
+	private void exportTxt() {
+		FileFilter filter = new FileNameExtensionFilter("Arquivos txt", "txt");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(filter);
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File arqSelecionado = chooser.getSelectedFile();
+			arqSelecionado = new File(arqSelecionado+".txt");
+			
+		}
+		
+	}
+	
+	/*private void exportCsv() {
+		FileFilter filter = new FileNameExtensionFilter("Arquivos csv", "csv");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(filter);
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File arqSelecionado = chooser.getSelectedFile();
+			arqSelecionado = new File(arqSelecionado+".csv");
+			
+		}
+		
+	}*/
+	
+	@FXML
+	private void miConcluida() {
+		exportFiltradas(StatusTarefa.CONCLUIDA);
+	}
+	
+	@FXML
+	private void miAdiada() {
+		exportFiltradas(StatusTarefa.ADIADA);
+	}
+	
+	@FXML
+	private void miAberta() {
+		exportFiltradas(StatusTarefa.ABERTA);
+	}
 }

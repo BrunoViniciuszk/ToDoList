@@ -3,6 +3,8 @@ package br.senai.sp.lista.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.scene.image.Image;
+
 public class Tarefa implements Comparable<Tarefa> {
 	private long id;
 	private LocalDate dataCriacao;
@@ -83,7 +85,4 @@ public class Tarefa implements Comparable<Tarefa> {
 		}
 		
 	}
-	
-	
-	
 }

@@ -21,7 +21,17 @@
         <menus>
           <Menu mnemonicParsing="false" text="Arquivo">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#miSair" text="Sair" />
+                  <MenuItem mnemonicParsing="false" onAction="#miExport" text="Exportar para HTML" />
+                  <MenuItem fx:id="miApagar" mnemonicParsing="false" onAction="#miApagarClick" text="Apagar banco de dados" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportTxt" text="Exportar txt" />
+                  <Menu mnemonicParsing="false" text="Exportar">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#miConcluida" text="Concluída" />
+                        <MenuItem mnemonicParsing="false" onAction="#miAdiada" text="Adiada" />
+                        <MenuItem mnemonicParsing="false" onAction="#miAberta" text="Aberta" />
+                    </items>
+                  </Menu>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Editar">
@@ -31,12 +41,13 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Ajuda">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#miSobre" text="About" />
+                  <MenuItem mnemonicParsing="false" onAction="#miLogin" text="Login" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-      <Label fx:id="lbData" layoutX="135.0" layoutY="83.0" text="Data de Realização" textFill="WHITE" />
+      <Label layoutX="364.0" layoutY="185.0" text="Aberta" textFill="WHITE" />
       <DatePicker fx:id="dateLimit" layoutX="132.0" layoutY="119.0" />
       <Label fx:id="lbTarefa" layoutX="31.0" layoutY="176.0" text="Tarefa" textFill="WHITE" />
       <TextField fx:id="tfTarefa" layoutX="31.0" layoutY="215.0" />
@@ -91,10 +102,10 @@
             <Tooltip text="Editar" />
          </tooltip>
       </Button>
-      <TableView fx:id="tvTarefa" layoutX="454.0" layoutY="100.0" prefHeight="486.0" prefWidth="591.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="100.0">
+      <TableView fx:id="tvTarefa" layoutX="454.0" layoutY="100.0" prefHeight="486.0" prefWidth="598.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="100.0">
         <columns>
           <TableColumn fx:id="tcData" prefWidth="154.0" text="Data" />
-          <TableColumn fx:id="tcTarefa" prefWidth="436.0" text="Tarefa" />
+          <TableColumn fx:id="tcTarefa" prefWidth="443.0" text="Tarefa" />
         </columns>
       </TableView>
       <Button fx:id="btConcluir" disable="true" layoutX="336.0" layoutY="379.0" mnemonicParsing="false" onAction="#btConcluirClick" prefHeight="66.0" prefWidth="74.0">
@@ -109,7 +120,16 @@
             <Tooltip text="Concluir" />
          </tooltip>
       </Button>
-      <TextArea fx:id="tfComments" layoutX="31.0" layoutY="353.0" onKeyPressed="#taKey" prefHeight="126.0" prefWidth="262.0" />
+      <TextArea fx:id="tfComments" layoutX="31.0" layoutY="353.0" onKeyPressed="#taKeyPressed" prefHeight="126.0" prefWidth="262.0" />
       <TextField fx:id="tfCode" editable="false" layoutX="25.0" layoutY="119.0" prefHeight="25.0" prefWidth="59.0" />
+      <TextField fx:id="tfConc" editable="false" layoutX="352.0" layoutY="151.0" prefHeight="25.0" prefWidth="59.0" />
+      <TextField fx:id="tfOpen" editable="false" layoutX="353.0" layoutY="203.0" prefHeight="25.0" prefWidth="59.0" />
+      <TextField fx:id="tfAdiada" editable="false" layoutX="351.0" layoutY="263.0" prefHeight="25.0" prefWidth="59.0" />
+      <Label layoutX="354.0" layoutY="123.0" text="Concluída" textFill="WHITE" />
+      <Label fx:id="lbData" layoutX="145.0" layoutY="93.0" text="Data de Realização" textFill="WHITE" />
+      <Label layoutX="364.0" layoutY="240.0" text="Adiada" textFill="WHITE" />
+      <Label layoutX="36.0" layoutY="85.0" text="Tarefas" textFill="WHITE" />
+      <TextField fx:id="tfAtraso" editable="false" layoutX="352.0" layoutY="314.0" prefHeight="25.0" prefWidth="59.0" />
+      <Label layoutX="357.0" layoutY="292.0" text="Atrasada" textFill="WHITE" />
    </children>
 </AnchorPane>

@@ -105,11 +105,57 @@ public class TarefaIO {
 		writer.close();
 	}
 	
-	public static long proximoId() throws FileNotFoundException {
+	/*public static long proximoId() throws FileNotFoundException {
 		Scanner leitor = new Scanner(new File(FILE_IDS));
 		long id = leitor.nextLong();
 		leitor.close();
 		return id;
+	}*/
+	
+	public static void exportHtml(List<Tarefa> lista, File arquivo) throws IOException {
+		FileWriter writer = new FileWriter(arquivo);
+		writer.append("<!DOCTYPE html>\n");
+		writer.append("<html>\n");
+		writer.append("<body>\n");
+		writer.append("<h1>Lista de Tarefas</h1>\n");
+		writer.append("<ul>\n");
+		for (Tarefa tarefa : lista) {
+			writer.append("<li>\n");
+			writer.append(tarefa.getDescricao()+ " - "+ tarefa.getDataLimite()+ " - "+ tarefa.getStatus());
+			writer.append("</li>\n");	
+		}
+		writer.append("</ul>\n");
+		writer.append("</body>\n");
+		writer.append("</html>\n");
+		writer.close();
 	}
+	
+	public static int contTarefas(List<Tarefa> tarefa) throws IOException {
+		File arquivoTarefas = new File(FILE_TAREFA);
+		FileReader reader = new FileReader(arquivoTarefas);
+		BufferedReader buff = new BufferedReader(reader);
+		int contador=0;
+		while (buff.readLine() != null) {
+			contador++;
+		}
+		buff.close();
+		return contador;
+	}
+	
+	public static void removeFiles() {
+		try {
+			File pasta = new File(FOLDER);
+			if (pasta.exists()) {
+				File arquivoIds = new File(FILE_IDS);
+				File arquivoTarefas = new File(FILE_TAREFA);
+				arquivoIds.delete();
+				arquivoTarefas.delete();
+				pasta.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 }

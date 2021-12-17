@@ -16,3 +16,11 @@
 	-fx-background-color: silver !important;
 	-fx-border-color: black;
 }
+
+.aPane {
+	-fx-border-radius: 20px;
+}
+
+.Painel {
+	-fx-background-image: url(../imagens/login.jpg); 
+}
